@@ -1,0 +1,3 @@
+174101055,Amit Kumar Sharma ,amit55@iitg.ac.in,75,CC
+174101012,Abdul Najim ,abdul12@iitg.ac.in,29,TA1
+174101058,Kunal Kishore,kunal58@iitg.ac.in,67,TA1
