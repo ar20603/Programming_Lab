@@ -6,7 +6,6 @@ bus(111, jalukbari, chandmari, 5, 2, 1, 100).
 bus(177, amingaon, chandmari, 13, 15, 23, 1000).
 bus(999, jalukbari, amingaon, 14.5, 15, 3, 10).
 
-:- use_module(library(lists)).
 
 clone([],[]).
 clone([H|T],[H|Z]):- clone(T,Z).
