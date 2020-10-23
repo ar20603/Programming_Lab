@@ -4,7 +4,7 @@ bus(245, jalukbari, panbazar, 7, 10, 10, 50).
 bus(756, panbazar, chandmari, 16, 15, 7, 8).
 bus(111, jalukbari, chandmari, 5, 2, 1, 100).
 bus(177, amingaon, chandmari, 13, 15, 23, 1000).
-%bus(999, jalukbari, amingaon, 14.5, 15, 3, 10).
+bus(999, jalukbari, amingaon, 14.5, 15, 3, 10).
 
 :- use_module(library(lists)).
 
@@ -118,21 +118,21 @@ findMinTimePath([Path | OtherPaths], BestDistance, BestCost, BestTime, BestPath)
 
 
 
-validPath(Src, Dest, [First]) :- 
-    First = Src,
-    Src = Dest.
+validPath(Src, Dest, Visited, Path) :- 
+    Src = Dest,
+    reverse(Visited, Path).
 
-validPath(Src, Dest, [First-BusID | RestPath]) :- 
-    First = Src,
+validPath(Src, Dest, [Src | OtherVisited], Path) :- 
     Src \= Dest,
-    bus(BusID, Src, X, _, _, _, _),
-    validPath(X, Dest, RestPath),
-    \+ member(First-_, RestPath).
+    bus(BusID, Src, NextStop, _, _, _, _),
+    NextStop \= Src,
+    \+ (member(NextStop-_, OtherVisited); member(NextStop, OtherVisited)),
+    validPath(NextStop, Dest, [NextStop | [Src-BusID | OtherVisited]], Path).
 
 
 route(Src, Dest) :-
-    findall(Path, ( validPath(Src, Dest, Path) ), AllPaths),
-
+    findall(Path, ( validPath(Src, Dest, [Src], Path) ), AllPaths),
+    %  write(AllPaths), nl,
     %  Finding optimum distance path
 
     findMinDistancePath(AllPaths, Distance1, Cost1, Time1, Path1),

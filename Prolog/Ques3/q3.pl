@@ -44,17 +44,17 @@ write_to_file(File, Output) :-
     write(Stream, Output), nl, 
     close(Stream).
 
-validPath(Src, Dest, [First]) :- 
-    First = Src,
-    Src = Dest.
+validPath(Src, Dest, Visited, FoundPath) :- 
+    Src = Dest,
+    reverse(Visited, FoundPath).
 
-validPath(Src, Dest, [First | RestPath]) :- 
-    First = Src,
+validPath(Src, Dest, [Src | OtherVisited], FoundPath) :- 
     Src \= Dest,
-    validPath(X, Dest, RestPath),
-    \+ member(First, RestPath).
+    bus(BusID, Src, NextStop, _, _, _, _),
+    NextStop \= Src,
+    \+ (member(NextStop-_, OtherVisited); member(NextStop, OtherVisited)),
+    validPath(NextStop, Dest, [NextStop | [Src-BusID | OtherVisited]], FoundPath).
 
 
 route(Src, Dest) :-
-    findall(Path, ( validPath(Src, Dest, Path) ), AllPaths),
-    write_to_file('all_paths.txt', AllPaths).
+    findall(Path, ( validPath(Src, Dest, [Src], Path) ), AllPaths),
